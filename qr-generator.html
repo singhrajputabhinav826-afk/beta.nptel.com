@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Maker for Sample Page</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:680px;margin:40px auto;padding:0 16px;color:#202124}
+input{width:100%;padding:12px;font-size:16px;margin:8px 0 14px;border:1px solid #aaa;border-radius:8px}
+button{padding:11px 16px;border:0;border-radius:8px;background:#202124;color:white;font-size:15px;cursor:pointer}
+#qrcode{margin:22px 0;padding:12px;display:inline-block;background:white}
+small{color:#555;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>Make a QR code for your sample page</h1>
+<p>First publish the site on GitHub Pages. Paste its public URL below, then create and download the QR code.</p>
+<label for="url">Published page URL</label>
+<input id="url" type="url" placeholder="https://yourname.github.io/repository/" required>
+<button id="make">Generate QR code</button>
+<div id="qrcode" aria-label="Generated QR code"></div><br>
+<button id="download" hidden>Download QR PNG</button>
+<p><small>The QR code will open only the URL you enter. This tool does not create an official NPTEL verification link.</small></p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+let qr;
+document.getElementById('make').addEventListener('click',()=>{
+ const value=document.getElementById('url').value.trim();
+ if(!/^https:\/\/.+/.test(value)){alert('Enter the full published HTTPS URL first.');return;}
+ const box=document.getElementById('qrcode'); box.innerHTML='';
+ qr=new QRCode(box,{text:value,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});
+ document.getElementById('download').hidden=false;
+});
+document.getElementById('download').addEventListener('click',()=>{
+ const box=document.getElementById('qrcode');
+ const img=box.querySelector('img');
+ const canvas=box.querySelector('canvas');
+ const url=img ? img.src : (canvas ? canvas.toDataURL('image/png') : null);
+ if(!url)return;
+ const a=document.createElement('a');a.href=url;a.download='sample-page-qr.png';a.click();
+});
+</script>
+</body>
+</html>
